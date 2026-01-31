@@ -1,9 +1,22 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fs = require("fs");
 require("dotenv").config();
 
-const taskRoutes = require("./routes/taskRoutes");
+const routesPath = "./routes/taskRoutes";
+
+// Debug: check if the routes folder and file exist
+try {
+  console.log("Files in routes folder:", fs.readdirSync("./routes"));
+  if (!fs.existsSync(routesPath + ".js")) {
+    throw new Error(`${routesPath}.js not found!`);
+  }
+} catch (err) {
+  console.error("Routes folder check failed:", err.message);
+}
+
+const taskRoutes = require(routesPath);
 
 const app = express();
 
