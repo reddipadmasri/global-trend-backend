@@ -4,19 +4,19 @@ const cors = require("cors");
 const fs = require("fs");
 require("dotenv").config();
 
-const routesPath = "./routes/taskRoutes";
-
-// Debug: check if the routes folder and file exist
+// Debug: check if Routes folder and taskRoutes.js exist
 try {
-  console.log("Files in routes folder:", fs.readdirSync("./routes"));
-  if (!fs.existsSync(routesPath + ".js")) {
-    throw new Error(`${routesPath}.js not found!`);
+  console.log("Files in Routes folder:", fs.readdirSync("./Routes"));
+  if (!fs.existsSync("./Routes/taskRoutes.js")) {
+    throw new Error("./Routes/taskRoutes.js not found!");
   }
 } catch (err) {
   console.error("Routes folder check failed:", err.message);
+  process.exit(1); // stop server if routes not found
 }
 
-const taskRoutes = require(routesPath);
+// Require routes
+const taskRoutes = require("./Routes/taskRoutes");
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use("/api/tasks", taskRoutes);
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error(err));
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // Server
 const PORT = process.env.PORT || 5000;
